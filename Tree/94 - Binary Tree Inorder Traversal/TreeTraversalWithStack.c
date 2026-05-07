@@ -23,29 +23,25 @@ struct TreeNode
     struct TreeNode* right;
 };
 
-void fillAnswer(struct TreeNode* node, int* answer, int* position)
-{
-    if (node == NULL)
-    {
-        return;
-    }
-
-    fillAnswer(node->left, answer, position);
-    answer[(*position)++] = node->val;
-    fillAnswer(node->right, answer, position);
-}
-
 int* inorderTraversal(struct TreeNode* root, int* returnSize)
 {
     int* answer = malloc(sizeof(int) * 101);
+    *returnSize = 0;
+    struct TreeNode** stack = malloc(sizeof(struct TreeNode*) * 101);
+    int stackSize = 0;
+    struct TreeNode* curr = root;
 
-    if (answer == NULL)
+    while (curr != NULL || stackSize != 0)
     {
-        return NULL;
+        while (curr != NULL)
+        {
+            stack[stackSize++] = curr;
+            curr = curr->left;
+        }
+
+        answer[(*returnSize)++] = stack[--stackSize]->val;
+        curr = stack[stackSize]->right;
     }
 
-    *returnSize = 0;
-
-    fillAnswer(root, answer, returnSize);
     return answer;
 }
